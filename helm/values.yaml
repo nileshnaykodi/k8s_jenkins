@@ -475,6 +475,25 @@ controller:
     #   hosts:
     #     - jenkins-external.example.com
 
+
+# If you're running on GKE and need to configure a backendconfig
+# to finish ingress setup, use the following values.
+# Docs: https://cloud.google.com/kubernetes-engine/docs/concepts/backendconfig
+  backendconfig:
+    enabled: false
+    apiVersion: "extensions/v1beta1"
+    name:
+    labels: {}
+    annotations: {}
+    spec: {}
+
+# Openshift route
+  route:
+    enabled: false
+    labels: {}
+    annotations: {}
+    # path: "/jenkins"
+        
   # controller.hostAliases allows for adding entries to Pod /etc/hosts:
   # https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   hostAliases: []
@@ -880,3 +899,4 @@ awsSecurityGroupPolicies:
     - name: ""
       securityGroupIds: []
       podSelector: {}
+
