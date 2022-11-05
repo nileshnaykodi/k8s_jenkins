@@ -21,7 +21,7 @@ controller:
   image: "jenkins/jenkins"
   # tag: "2.346.2-jdk11"
   tagLabel: jdk11
-  imagePullPolicy: "Always"
+  imagePullPolicy: "IfNotPresent"
   imagePullSecretName:
   # Optionally configure lifetime for controller-container
   lifecycle:
@@ -47,6 +47,7 @@ controller:
   # you should revert controller.adminUser to your preferred admin user:
   adminUser: "admin"
   # adminPassword: <defaults to random>
+  adminPassword: "admin"
   admin:
     existingSecret: ""
     userKey: jenkins-admin-user
@@ -65,18 +66,18 @@ controller:
   resources:
     requests:
       cpu: "50m"
-      memory: "256Mi"
+      memory: "250Mi"
     limits:
       cpu: "2000m"
       memory: "4096Mi"
   # Overrides the init container default values
-  # initContainerResources:
-  #   requests:
-  #     cpu: "50m"
-  #     memory: "256Mi"
-  #   limits:
-  #     cpu: "2000m"
-  #     memory: "4096Mi"
+  #initContainerResources:
+  #  requests:
+  #    cpu: "50m"
+  #    memory: "256Mi"
+  #  limits:
+  #    cpu: "2000m"
+  #    memory: "4096Mi"
   # Environment variables that get added to the init container (useful for e.g. http_proxy)
   # initContainerEnv:
   #   - name: http_proxy
@@ -241,7 +242,7 @@ controller:
     - kubernetes:3600.v144b_cd192ca_a_
     - workflow-aggregator:581.v0c46fa_697ffd
     - git:4.11.3
-    - configuration-as-code:1429.v09b_044a_c93de
+    - configuration-as-code
 
   # Set to false to download the minimum required version of all dependencies.
   installLatestPlugins: true
