@@ -1,0 +1,45 @@
+Description: "AWS CloudFormation template for deploying kubernetes cluster in AWS EKS"
+
+Parameters:
+  clusterRoleArn:
+    Type: "String"
+    Description: "AWS IAM Role to allow access to other AWS resources to operate clusters managed by EKS."
+  securityGroupIds:
+    Type: "List<AWS::EC2::SecurityGroup::Id>"
+    Description: "Existing security group Ids"
+  subnetIds:
+    Type: "List<AWS::EC2::Subnet::Id>"
+  nodeRoleArn:
+    Type: "String"
+    Description: "AWS IAM Role to allow access to other AWS resources to operate clusters managed by EKS."
+
+Resources:
+  mycluster:
+      Type: AWS::EKS::Cluster
+      Properties:
+        Name: testcluster
+        RoleArn: !Ref clusterRoleArn
+        ResourcesVpcConfig:
+          SecurityGroupIds: !Ref securityGroupIds
+          SubnetIds: !Ref subnetIds
+          EndpointPublicAccess: true
+          EndpointPrivateAccess: true
+  mynodegroup: #using managed node group
+    Type: 'AWS::EKS::Nodegroup'
+    Properties:
+      ClusterName: testcluster
+      NodeRole: !Ref nodeRoleArn
+      ScalingConfig:
+        MinSize: 1
+        DesiredSize: 2
+        MaxSize: 2
+      Subnets: !Ref subnetIds
+      AmiType: "AL2_ARM_64"
+      CapacityType: "ON_DEMAND"
+      DiskSize: 8
+      InstanceTypes: "t4g.small"
+
+Outputs:
+  clustreendpointurl:
+    Value: !GetAtt Endpoint
+    Description: "Kubernetes API Server Url"
