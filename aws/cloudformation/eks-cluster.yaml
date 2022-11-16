@@ -24,7 +24,7 @@ Resources:
           SubnetIds: !Ref subnetIds
           EndpointPublicAccess: true
           EndpointPrivateAccess: true
-  jenkins_controller_nodegroup:
+  jenkinscontrollernodegroup:
     Type: 'AWS::EKS::Nodegroup'
     Properties:
       ClusterName: testcluster
@@ -34,26 +34,30 @@ Resources:
         DesiredSize: 1
         MaxSize: 1
       Subnets: !Ref subnetIds
-      Labels: jenkins_controller
+      Labels:
+        name: jenkins_controller
       AmiType: "AL2_x86_64"
       CapacityType: "ON_DEMAND"
       DiskSize: 8
-      InstanceTypes: "t3a.micro"
-  jenkins_agent_nodegroup:
+      InstanceTypes: 
+        - t3a.micro
+  jenkinsagentnodegroup:
     Type: 'AWS::EKS::Nodegroup'
     Properties:
       ClusterName: testcluster
       NodeRole: !Ref nodeRoleArn
       ScalingConfig:
         MinSize: 0
-        DesiredSize: 1
+        DesiredSize: 0
         MaxSize: 1
       Subnets: !Ref subnetIds
-      Labels: jenkins_agent
+      Labels:
+        name: jenkins_agent
       AmiType: "AL2_x86_64"
       CapacityType: "ON_DEMAND"
       DiskSize: 8
-      InstanceTypes: "t3a.small"
+      InstanceTypes: 
+        - t3a.small
 
 
 Outputs:
