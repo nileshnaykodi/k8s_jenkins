@@ -24,22 +24,43 @@ Resources:
           SubnetIds: !Ref subnetIds
           EndpointPublicAccess: true
           EndpointPrivateAccess: true
-  mynodegroup: #using managed node group
+  jenkinscontrollernodegroup:
     Type: 'AWS::EKS::Nodegroup'
     Properties:
       ClusterName: testcluster
       NodeRole: !Ref nodeRoleArn
       ScalingConfig:
         MinSize: 1
-        DesiredSize: 2
-        MaxSize: 2
+        DesiredSize: 1
+        MaxSize: 1
       Subnets: !Ref subnetIds
-      AmiType: "AL2_ARM_64"
+      Labels:
+        name: jenkins_controller
+      AmiType: "AL2_x86_64"
       CapacityType: "ON_DEMAND"
       DiskSize: 8
-      InstanceTypes: "t4g.small"
+      InstanceTypes: 
+        - t3a.micro
+  jenkinsagentnodegroup:
+    Type: 'AWS::EKS::Nodegroup'
+    Properties:
+      ClusterName: testcluster
+      NodeRole: !Ref nodeRoleArn
+      ScalingConfig:
+        MinSize: 0
+        DesiredSize: 0
+        MaxSize: 1
+      Subnets: !Ref subnetIds
+      Labels:
+        name: jenkins_agent
+      AmiType: "AL2_x86_64"
+      CapacityType: "ON_DEMAND"
+      DiskSize: 8
+      InstanceTypes: 
+        - t3a.small
+
 
 Outputs:
   clustreendpointurl:
-    Value: !GetAtt Endpoint
+    Value: !GetAtt mycluster.Endpoint
     Description: "Kubernetes API Server Url"
